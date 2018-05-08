@@ -2,54 +2,54 @@
 
 namespace ByTIC\Omnipay\Payu\Message;
 
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\PurchaseRequest as AbstractPurchaseRequest;
+use ByTIC\Omnipay\Common\Message\Traits\RequestDataGetWithValidationTrait;
 
 /**
  * PayU Purchase Request
  */
-class PurchaseRequest extends AbstractPurchaseRequest
+class PurchaseRequest extends AbstractRequest
 {
+    use RequestDataGetWithValidationTrait;
 
     protected $liveEndpoint = 'https://secure.payu.ro/order/lu.php';
     protected $testEndpoint = 'https://secure.payu.ro/order/lu.php';
 
     /**
-     * @param $value
-     * @return mixed
+     * @inheritdoc
      */
-    public function setMerchant($value)
+    public function initialize(array $parameters = [])
     {
-        return $this->setParameter('merchant', $value);
+        $parameters['currency'] = isset($parameters['currency']) ? $parameters['currency'] : 'ron';
+        $parameters['orderDate'] = isset($parameters['orderDate']) ? $parameters['orderDate'] : date('Y-m-d H:i:s');
+
+        return parent::initialize($parameters);
     }
 
-    /**
-     * @param $value
-     * @return mixed
+    /** @noinspection PhpMissingParentCallCommonInspection
+     * @inheritdoc
      */
-    public function setSecretKey($value)
+    public function validateDataFields()
     {
-        return $this->setParameter('secretKey', $value);
+        return [
+            'amount', 'currency', 'orderId', 'orderName', 'orderDate',
+            'notifyUrl', 'returnUrl', 'secretKey', 'merchant',
+            'card'
+        ];
     }
 
     /**
      * @inheritdoc
      */
-    public function getData()
+    protected function populateData()
     {
-        $this->validate(
-            'amount', 'currency', 'orderId', 'orderName', 'orderDate',
-            'notifyUrl', 'returnUrl', 'secretKey', 'merchant',
-            'card'
-        );
-
         $data = [];
 
         $this->populateDataOrder($data);
         $this->populateDataOrderItems($data);
         $this->populateDataCard($data);
 
-
         $data["ORDER_HASH"] = $this->generateHmac($this->generateHashString($data));
+        $data['redirectUrl'] = $this->getEndpointUrl();
 
         return $data;
     }
@@ -73,14 +73,6 @@ class PurchaseRequest extends AbstractPurchaseRequest
     }
 
     /**
-     * @return mixed
-     */
-    public function getMerchant()
-    {
-        return $this->getParameter('merchant');
-    }
-
-    /**
      * @param $data
      */
     protected function populateDataOrderItems(&$data)
@@ -92,7 +84,7 @@ class PurchaseRequest extends AbstractPurchaseRequest
         $vat = [];
 
         $items = $this->getItems();
-        if (count($items)) {
+        if ($items instanceof \Countable && count($items)) {
 //            foreach ($items as $item) {
 //            }
         } elseif ($this->getAmount() > 0) {
@@ -147,14 +139,6 @@ class PurchaseRequest extends AbstractPurchaseRequest
     {
         $key = $this->getSecretKey();
         return Helper::generateHmac($data, $key);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSecretKey()
-    {
-        return $this->getParameter('secretKey');
     }
 
     /**
@@ -216,10 +200,105 @@ class PurchaseRequest extends AbstractPurchaseRequest
     }
 
     /**
+     * @return mixed
+     */
+    public function getEndpointUrl()
+    {
+        return $this->liveEndpoint;
+    }
+
+    // ------------ Getter'n'Setters ------------ //
+
+    /**
+     * @return mixed
+     */
+    public function getMerchant()
+    {
+        return $this->getParameter('merchant');
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public function setMerchant($value)
+    {
+        return $this->setParameter('merchant', $value);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSecretKey()
+    {
+        return $this->getParameter('secretKey');
+    }
+
+    /**
+     * @param $value
+     * @return mixed
+     */
+    public function setSecretKey($value)
+    {
+        return $this->setParameter('secretKey', $value);
+    }
+
+    /**
      * @return string
      */
     public function getCtrl()
     {
         return $this->generateHmac(Helper::generateHashFromString($this->getReturnUrl()));
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderId()
+    {
+        return $this->getParameter('orderId');
+    }
+
+    /**
+     * @param  string $value
+     * @return mixed
+     */
+    public function setOrderId($value)
+    {
+        return $this->setParameter('orderId', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderName()
+    {
+        return $this->getParameter('orderName');
+    }
+
+    /**
+     * @param  string $value
+     * @return mixed
+     */
+    public function setOrderName($value)
+    {
+        return $this->setParameter('orderName', $value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOrderDate()
+    {
+        return $this->getParameter('orderDate');
+    }
+
+    /**
+     * @param  string $value
+     * @return mixed
+     */
+    public function setOrderDate($value)
+    {
+        return $this->setParameter('orderDate', $value);
     }
 }

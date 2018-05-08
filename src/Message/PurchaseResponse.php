@@ -1,15 +1,21 @@
 <?php
 
-namespace ByTIC\Common\Payments\Gateways\Providers\Payu\Message;
+namespace ByTIC\Omnipay\Payu\Message;
 
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\PurchaseResponse as AbstractPurchaseResponse;
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\RedirectResponse\RedirectTrait;
+use ByTIC\Omnipay\Common\Message\Traits\RedirectHtmlTrait;
 use Omnipay\Common\Message\RedirectResponseInterface;
 
 /**
  * PayU Purchase Response
  */
-class PurchaseResponse extends AbstractPurchaseResponse implements RedirectResponseInterface
+class PurchaseResponse extends AbstractResponse implements RedirectResponseInterface
 {
-    use RedirectTrait;
+    use RedirectHtmlTrait;
+    /**
+     * @return array
+     */
+    public function getRedirectData()
+    {
+        return $this->getData();
+    }
 }

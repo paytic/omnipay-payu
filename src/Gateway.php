@@ -40,8 +40,6 @@ class Gateway extends AbstractGateway
      */
     public function purchase(array $parameters = []): RequestInterface
     {
-        $parameters['endpointUrl'] = $this->getEndpointUrl();
-
         return $this->createRequest(
             PurchaseRequest::class,
             array_merge($this->getDefaultParameters(), $parameters)
@@ -82,28 +80,6 @@ class Gateway extends AbstractGateway
             'merchant' => $this->getMerchant(),
             'secreteKey' => $this->getSecretKey(),
         ];
-    }
-
-
-    /**
-     * Get live- or testURL.
-     */
-    public function getEndpointUrl()
-    {
-        $defaultUrl = $this->getTestMode() === false
-            ? $this->endpointLive
-            : $this->endpointSandbox;
-        return $this->parameters->get('endpointUrl', $defaultUrl);
-    }
-
-    /**
-     * @param  boolean $value
-     * @return $this|AbstractGateway
-     */
-    public function setTestMode($value)
-    {
-        $this->parameters->remove('endpointUrl');
-        return parent::setTestMode($value);
     }
 
     // ------------ Getter'n'Setters ------------ //
