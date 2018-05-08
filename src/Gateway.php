@@ -2,7 +2,9 @@
 
 namespace ByTIC\Omnipay\Payu;
 
+use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
+use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\RequestInterface;
 
@@ -22,31 +24,6 @@ use Omnipay\Common\Message\RequestInterface;
  */
 class Gateway extends AbstractGateway
 {
-
-    /**
-     * @var string
-     */
-    protected $endpointSandbox = 'http://sandboxsecure.mobilpay.ro';
-
-    /**
-     * @var string
-     */
-    protected $endpointLive = 'https://secure.mobilpay.ro';
-
-    /**
-     * @var string
-     */
-    protected $signature;
-
-    /**
-     * @var string|null Certificate Content
-     */
-    protected $certificate;
-
-    /**
-     * @var string|null PrivateKey Content
-     */
-    protected $privateKey;
 
     /**
      * @inheritdoc
@@ -102,9 +79,8 @@ class Gateway extends AbstractGateway
     {
         return [
             'testMode' => true, // Must be the 1st in the list!
-            'signature' => $this->getSignature(),
-            'certificate' => $this->getCertificate(),
-            'privateKey' => $this->getPrivateKey(),
+            'merchant' => $this->getMerchant(),
+            'secreteKey' => $this->getSecretKey(),
         ];
     }
 
@@ -135,50 +111,34 @@ class Gateway extends AbstractGateway
     /**
      * @return mixed
      */
-    public function getSignature()
+    public function getMerchant()
     {
-        return $this->signature;
+        return $this->getParameter('merchant');
     }
 
     /**
-     * @param mixed $signature
+     * @param $value
+     * @return mixed
      */
-    public function setSignature($signature)
+    public function setMerchant($value)
     {
-        $this->signature = $signature;
+        return $this->setParameter('merchant', $value);
     }
 
     /**
-     * @return null|string
+     * @param $value
+     * @return mixed
      */
-    public function getCertificate()
+    public function setSecretKey($value)
     {
-        return $this->certificate;
+        return $this->setParameter('secretKey', $value);
     }
 
     /**
-     * @param null|string $certificate
+     * @return mixed
      */
-    public function setCertificate($certificate)
+    public function getSecretKey()
     {
-        $this->certificate = $certificate;
+        return $this->getParameter('secretKey');
     }
-
-
-    /**
-     * @return string
-     */
-    public function getPrivateKey()
-    {
-        return $this->privateKey;
-    }
-
-    /**
-     * @param string $privateKey
-     */
-    public function setPrivateKey(string $privateKey)
-    {
-        $this->privateKey = $privateKey;
-    }
-
 }

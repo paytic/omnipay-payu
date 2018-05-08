@@ -21,5 +21,4 @@ class GatewayTest extends AbstractTest
             $gateway->getEndpointUrl()
         );
     }
-
 }
