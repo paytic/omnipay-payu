@@ -53,7 +53,7 @@ class Gateway extends AbstractGateway
      */
     public function getName()
     {
-        return 'Twispay';
+        return 'Payu';
     }
 
     // ------------ REQUESTS ------------ //
