@@ -3,8 +3,11 @@
 namespace ByTIC\Omnipay\Payu\Tests;
 
 use ByTIC\Omnipay\Payu\Gateway;
+use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
+use ByTIC\Omnipay\Payu\Message\CompletePurchaseResponse;
 use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\PurchaseResponse;
+use ByTIC\Omnipay\Payu\Tests\Fixtures\PayuData;
 
 /**
  * Class HelperTest
@@ -17,13 +20,14 @@ class GatewayTest extends AbstractTest
      */
     protected $client;
 
+    /**
+     * @var Gateway
+     */
+    protected $gateway;
+
     public function testPurchase()
     {
-        $gateway = new Gateway();
-
         $parameters = [
-            'merchant' => $_ENV['PAYU_MERCHANT'],
-            'secretKey' => $_ENV['PAYU_KEY'],
             'orderId' => '99',
             'orderName' => 'Test order name',
             'notifyUrl' => 'http://localhost',
@@ -33,7 +37,8 @@ class GatewayTest extends AbstractTest
                 'first_name' => '',
             ],
         ];
-        $request = $gateway->purchase($parameters);
+
+        $request = $this->gateway->purchase($parameters);
         self::assertInstanceOf(PurchaseRequest::class, $request);
 
         /** @var PurchaseResponse $response */
@@ -48,11 +53,43 @@ class GatewayTest extends AbstractTest
         $body = $payuResponse->getBody(true);
         self::assertContains('checkout.php', $body);
         self::assertContains('CART_ID=', $body);
+        self::assertContains('REF=99', $body);
+    }
+
+    public function testCompletePurchaseResponse()
+    {
+        $httpRequest = PayuData::getConfirmAuthorizedRequest();
+        $response = $this->doCompletePurchaseResponse($httpRequest);
+//        self::assertEquals(null, $response->getModel()->status);
+    }
+
+    /**
+     * @param $httpRequest
+     * @return CompletePurchaseResponse
+     */
+    protected function doCompletePurchaseResponse($httpRequest)
+    {
+        $this->gateway->setHttpRequest($httpRequest);
+        /** @var CompletePurchaseRequest $request */
+        $request = $this->gateway->completePurchase();
+        /** @var CompletePurchaseResponse $response */
+        $response = $request->send();
+
+        self::assertInstanceOf(CompletePurchaseResponse::class, $response);
+        self::assertFalse($response->isSuccessful());
+        self::assertFalse($response->isCancelled());
+        self::assertTrue($response->isPending());
+
+        return $response;
     }
 
     protected function setUp()
     {
         parent::setUp();
         $this->client = new \Guzzle\Http\Client();
+
+        $this->gateway = new Gateway();
+        $this->gateway->setMerchant($_ENV['PAYU_MERCHANT']);
+        $this->gateway->setSecretKey($_ENV['PAYU_KEY']);
     }
 }

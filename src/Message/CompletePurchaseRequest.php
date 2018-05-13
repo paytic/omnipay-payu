@@ -2,9 +2,9 @@
 
 namespace ByTIC\Omnipay\Payu\Message;
 
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\CompletePurchaseRequest as AbstractRequest;
-use ByTIC\Omnipay\Payu\Gateway;
-use ByTIC\Common\Payments\Models\Purchase\Traits\IsPurchasableModelTrait;
+use ByTIC\Omnipay\Common\Message\Traits\GatewayNotificationRequestTrait;
+use ByTIC\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
+use ByTIC\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
 
 /**
  * Class PurchaseResponse
@@ -12,56 +12,64 @@ use ByTIC\Common\Payments\Models\Purchase\Traits\IsPurchasableModelTrait;
  */
 class CompletePurchaseRequest extends AbstractRequest
 {
+    use GatewayNotificationRequestTrait;
+    use RequestHasSecretKeyTrait;
+    use RequestHasHmacTrait;
 
-    public function initData()
+    /**
+     * @return mixed
+     */
+    protected function isValidNotification()
     {
-        parent::initData();
+        return $this->hasGet('ctrl') && $this->isValidCtrl();
+    }
 
-        $this->validate('modelManager');
+    /**
+     * @return bool|mixed
+     */
+    protected function parseNotification()
+    {
+        $data = $this->httpRequest->query->all();
 
-        $this->pushData('valid', false);
-        if ($this->validateModel() && $this->validateCtrl()) {
-            $this->pushData('valid', true);
-        }
+        return $data;
     }
 
     /**
      * @return bool
      */
-    public function validateCtrl()
+    protected function isValidCtrl()
     {
-        $ctrl = $this->httpRequest->query->get('ctrl');
-        $this->pushData('ctrl', $ctrl);
-        $modelCtrl = $this->getModelCtrl();
-        $this->pushData('model_ctrl', $modelCtrl);
-        if ($ctrl == $modelCtrl) {
-            $this->pushData('valid', true);
+        return $this->httpRequest->query->get('ctrl') == $this->getCtrl();
+    }
 
-            return true;
+    /**
+     * @return mixed
+     */
+    protected function getCtrl()
+    {
+        if (!$this->hasDataItem('ctrl')) {
+            $this->setDataItem('ctrl', $this->generateCtrl());
         }
 
-        return false;
+        return $this->getDataItem('ctrl');
     }
 
     /**
      * @return string
      */
-    public function getModelCtrl()
+    protected function generateCtrl()
     {
-        /** @var IsPurchasableModelTrait $model */
-        $model = $this->getDataItem('model');
-        /** @var Gateway $gateway */
-        $gateway = $model->getPaymentMethod()->getType()->getGateway();
-        $purchaseRequest = $gateway->purchaseFromModel($model);
+        $returnUrl = $this->determineReturnUrl();
 
-        return $purchaseRequest->getCtrl();
+        return $this->generateHmac(Helper::generateHashFromString($returnUrl));
     }
 
-    /** @noinspection PhpMissingParentCallCommonInspection
-     * @return bool
+    /**
+     * @return string
      */
-    protected function isProviderRequest()
+    protected function determineReturnUrl()
     {
-        return $this->hasGet('ctrl');
+        $url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+        return $url;
     }
 }

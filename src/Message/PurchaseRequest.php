@@ -3,6 +3,8 @@
 namespace ByTIC\Omnipay\Payu\Message;
 
 use ByTIC\Omnipay\Common\Message\Traits\RequestDataGetWithValidationTrait;
+use ByTIC\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
+use ByTIC\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
 
 /**
  * PayU Purchase Request
@@ -10,6 +12,8 @@ use ByTIC\Omnipay\Common\Message\Traits\RequestDataGetWithValidationTrait;
 class PurchaseRequest extends AbstractRequest
 {
     use RequestDataGetWithValidationTrait;
+    use RequestHasSecretKeyTrait;
+    use RequestHasHmacTrait;
 
     protected $liveEndpoint = 'https://secure.payu.ro/order/lu.php';
     protected $testEndpoint = 'https://secure.payu.ro/order/lu.php';
@@ -132,16 +136,6 @@ class PurchaseRequest extends AbstractRequest
     }
 
     /**
-     * @param $data
-     * @return string
-     */
-    protected function generateHmac($data)
-    {
-        $key = $this->getSecretKey();
-        return Helper::generateHmac($data, $key);
-    }
-
-    /**
      * @param array $data
      * @return string
      */
@@ -224,23 +218,6 @@ class PurchaseRequest extends AbstractRequest
     public function setMerchant($value)
     {
         return $this->setParameter('merchant', $value);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSecretKey()
-    {
-        return $this->getParameter('secretKey');
-    }
-
-    /**
-     * @param $value
-     * @return mixed
-     */
-    public function setSecretKey($value)
-    {
-        return $this->setParameter('secretKey', $value);
     }
 
     /**

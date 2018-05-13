@@ -5,6 +5,7 @@ namespace ByTIC\Omnipay\Payu;
 use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
+use HttpRequest;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\RequestInterface;
 
@@ -116,5 +117,13 @@ class Gateway extends AbstractGateway
     public function getSecretKey()
     {
         return $this->getParameter('secretKey');
+    }
+
+    /**
+     * @param HttpRequest $httpRequest
+     */
+    public function setHttpRequest($httpRequest)
+    {
+        $this->httpRequest = $httpRequest;
     }
 }

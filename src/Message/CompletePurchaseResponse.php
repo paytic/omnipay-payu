@@ -2,7 +2,8 @@
 
 namespace ByTIC\Omnipay\Payu\Message;
 
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\CompletePurchaseResponse as AbstractResponse;
+use ByTIC\Omnipay\Common\Message\Traits\GatewayNotificationResponseTrait;
+use ByTIC\Omnipay\Common\Message\Traits\HtmlResponses\ConfirmHtmlTrait;
 
 /**
  * Class PurchaseResponse
@@ -10,6 +11,16 @@ use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\CompletePur
  */
 class CompletePurchaseResponse extends AbstractResponse
 {
+    use ConfirmHtmlTrait;
+    use GatewayNotificationResponseTrait;
+
+    /** @noinspection PhpMissingParentCallCommonInspection
+     * @inheritdoc
+     */
+    public function isPending()
+    {
+        return $this->hasNotificationDataItem('ctrl');
+    }
 
     /**
      * Response Message
@@ -21,24 +32,7 @@ class CompletePurchaseResponse extends AbstractResponse
         if (!$this->isSuccessful()) {
             return 'Error authorising payment';
         }
+
         return parent::getMessage();
-    }
-
-    /**
-     * Is the response successful?
-     *
-     * @return boolean
-     */
-    public function isSuccessful()
-    {
-        return $this->data['valid'] === true;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function processModel()
-    {
-        return $this;
     }
 }
