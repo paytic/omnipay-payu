@@ -56,4 +56,17 @@ class Helper
 
         return md5($k_opad . pack("H*", md5($k_ipad . $data)));
     }
+
+    /**
+     * @param $country
+     * @return string
+     */
+    public static function generateCountryCode($country)
+    {
+        $transformation = [
+            'romania' => 'RO',
+        ];
+
+        return strtr(strtolower($country), $transformation);
+    }
 }
