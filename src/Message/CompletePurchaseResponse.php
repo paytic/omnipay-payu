@@ -14,14 +14,6 @@ class CompletePurchaseResponse extends AbstractResponse
     use ConfirmHtmlTrait;
     use GatewayNotificationResponseTrait;
 
-    /** @noinspection PhpMissingParentCallCommonInspection
-     * @inheritdoc
-     */
-    public function isPending()
-    {
-        return $this->hasNotificationDataItem('ctrl');
-    }
-
     /**
      * Response Message
      *

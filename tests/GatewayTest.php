@@ -78,9 +78,9 @@ class GatewayTest extends AbstractTest
         $response = $request->send();
 
         self::assertInstanceOf(CompletePurchaseResponse::class, $response);
-        self::assertFalse($response->isSuccessful());
+        self::assertTrue($response->isSuccessful());
         self::assertFalse($response->isCancelled());
-        self::assertTrue($response->isPending());
+        self::assertFalse($response->isPending());
 
         return $response;
     }

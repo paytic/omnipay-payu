@@ -39,7 +39,11 @@ class CompletePurchaseRequest extends AbstractRequest
      */
     protected function isValidCtrl()
     {
-        return $this->httpRequest->query->get('ctrl') == $this->getCtrl();
+        $isValid = $this->httpRequest->query->get('ctrl') == $this->getCtrl();
+        if ($isValid) {
+            $this->setDataItem('success', true);
+        }
+        return $isValid;
     }
 
     /**
