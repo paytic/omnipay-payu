@@ -2,27 +2,63 @@
 
 namespace ByTIC\Omnipay\Payu\Message;
 
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\ServerCompletePurchaseRequest as AbstractRequest;
-use ByTIC\Common\Payments\Models\Purchase\Traits\IsPurchasableModelTrait;
+//use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\ServerCompletePurchaseRequest as AbstractRequest;
+//use ByTIC\Common\Payments\Models\Purchase\Traits\IsPurchasableModelTrait;
+use ByTIC\Omnipay\Common\Message\Traits\GatewayNotificationRequestTrait;
+use ByTIC\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
+use ByTIC\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
 
 /**
  * Class PurchaseResponse
  * @package ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Messages
+ *
+ * @method ServerCompletePurchaseResponse send()
  */
 class ServerCompletePurchaseRequest extends AbstractRequest
 {
-    public function initData()
-    {
-        parent::initData();
+    use GatewayNotificationRequestTrait;
+    use RequestHasSecretKeyTrait;
+    use RequestHasHmacTrait;
 
-        $this->validate('modelManager');
+    /**
+     * @inheritdoc
+     */
+    public function initialize(array $parameters = [])
+    {
         $this->prepareServer();
 
-        $this->pushData('valid', false);
-        if ($this->validateModel() && $this->validateHash()) {
-            $this->pushData('valid', true);
-        }
+        return parent::initialize($parameters);
     }
+
+    /**
+     * @return mixed
+     */
+    protected function isValidNotification()
+    {
+        return $this->hasPOST('HASH') && $this->hasPOST('REFNOEXT') && $this->validateHash();
+    }
+
+    /**
+     * @return bool|mixed
+     */
+    protected function parseNotification()
+    {
+        $data = $this->httpRequest->request->all();
+
+        return $data;
+    }
+//    public function initData()
+//    {
+//        parent::initData();
+//
+//        $this->validate('modelManager');
+//        $this->prepareServer();
+//
+//        $this->pushData('valid', false);
+//        if ($this->validateModel() && $this->validateHash()) {
+//            $this->pushData('valid', true);
+//        }
+//    }
 
     protected function prepareServer()
     {
@@ -40,10 +76,10 @@ class ServerCompletePurchaseRequest extends AbstractRequest
     protected function validateHash()
     {
         $hash = $this->httpRequest->request->get('HASH');
-        $this->pushData('hash', $hash);
+        $this->setDataItem('hash', $hash);
 
         $hmac = $this->generateHmac($this->generateHashString());
-        $this->pushData('hmac', $hmac);
+        $this->setDataItem('hmac', $hmac);
         if ($hmac == $hash) {
             $this->generateReturnHashString();
 
@@ -51,28 +87,6 @@ class ServerCompletePurchaseRequest extends AbstractRequest
         }
 
         return false;
-    }
-
-    /**
-     * @param $data
-     * @return string
-     */
-    protected function generateHmac($data)
-    {
-        $key = $this->getSecretKey();
-
-        return Helper::generateHmac($data, $key);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSecretKey()
-    {
-        /** @var IsPurchasableModelTrait $model */
-        $model = $this->getDataItem('model');
-
-        return $model->getPaymentMethod()->getType()->getGateway()->getSecretKey();
     }
 
     /**
@@ -106,23 +120,15 @@ class ServerCompletePurchaseRequest extends AbstractRequest
         $return .= Helper::generateHashFromString($post["IPN_DATE"][0]);
         $return .= Helper::generateHashFromString($dateReturn);
 
-        $this->pushData('dateReturn', $dateReturn);
-        $this->pushData('hashReturn', $this->generateHmac($return));
+        $this->setDataItem('dateReturn', $dateReturn);
+        $this->setDataItem('hashReturn', $this->generateHmac($return));
     }
-
-    /**
-     * @return int
-     */
-    public function getModelIdFromRequest()
-    {
-        return $this->getHttpRequest()->request->get('REFNOEXT');
-    }
-
-    /** @noinspection PhpMissingParentCallCommonInspection
-     * @return bool
-     */
-    protected function isProviderRequest()
-    {
-        return $this->hasPOST('HASH', 'REFNOEXT');
-    }
+//
+//    /**
+//     * @return int
+//     */
+//    public function getModelIdFromRequest()
+//    {
+//        return $this->getHttpRequest()->request->get('REFNOEXT');
+//    }
 }

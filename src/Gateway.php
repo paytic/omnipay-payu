@@ -5,7 +5,7 @@ namespace ByTIC\Omnipay\Payu;
 use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
-use HttpRequest;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\RequestInterface;
 
@@ -60,6 +60,7 @@ class Gateway extends AbstractGateway
 
     /**
      * @inheritdoc
+     * @return ServerCompletePurchaseRequest
      */
     public function serverCompletePurchase(array $parameters = []): RequestInterface
     {

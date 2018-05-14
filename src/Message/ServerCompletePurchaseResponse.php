@@ -2,7 +2,8 @@
 
 namespace ByTIC\Omnipay\Payu\Message;
 
-use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\ServerCompletePurchaseResponse as AbstractResponse;
+//use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\ServerCompletePurchaseResponse as AbstractResponse;
+use ByTIC\Omnipay\Common\Message\Traits\GatewayNotificationResponseTrait;
 
 /**
  * Class PurchaseResponse
@@ -10,6 +11,7 @@ use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\ServerCompl
  */
 class ServerCompletePurchaseResponse extends AbstractResponse
 {
+    use GatewayNotificationResponseTrait;
 
     /**
      * Is the response successful?
@@ -28,7 +30,7 @@ class ServerCompletePurchaseResponse extends AbstractResponse
      */
     public function getCode()
     {
-        return $this->data['ipn_data']['ORDERSTATUS'];
+        return $this->getNotificationDataItem('ORDERSTATUS');
     }
 
     /**
@@ -66,7 +68,7 @@ class ServerCompletePurchaseResponse extends AbstractResponse
      */
     public function getTransactionReference()
     {
-        return $this->data['ipn_data']['REFNO'];
+        return $this->getNotificationDataItem('REFNO');
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection
@@ -76,7 +78,7 @@ class ServerCompletePurchaseResponse extends AbstractResponse
      */
     public function getTransactionId()
     {
-        return $this->data['ipn_data']['REFNOEXT'];
+        return $this->getNotificationDataItem('REFNOEXT');
     }
 
     /** @noinspection PhpMissingParentCallCommonInspection
@@ -84,14 +86,6 @@ class ServerCompletePurchaseResponse extends AbstractResponse
      */
     public function getTransactionDate()
     {
-        return $this->data['ipn_data']['SALEDATE'];
-    }
-
-    /** @noinspection PhpMissingParentCallCommonInspection
-     * @return bool
-     */
-    protected function canProcessModel()
-    {
-        return true;
+        return $this->getNotificationDataItem('SALEDATE');
     }
 }

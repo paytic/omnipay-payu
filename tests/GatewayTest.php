@@ -7,6 +7,8 @@ use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\CompletePurchaseResponse;
 use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\PurchaseResponse;
+use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
+use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseResponse;
 use ByTIC\Omnipay\Payu\Tests\Fixtures\PayuData;
 
 /**
@@ -81,6 +83,28 @@ class GatewayTest extends AbstractTest
         self::assertTrue($response->isPending());
 
         return $response;
+    }
+
+    public function testServerCompletePurchaseAuthorizedResponse()
+    {
+        $httpRequest = PayuData::getIpnAuthorizedRequest();
+        $this->gateway->setHttpRequest($httpRequest);
+        $request = $this->gateway->serverCompletePurchase();
+        $response = $request->send();
+
+        self::assertInstanceOf(ServerCompletePurchaseResponse::class, $response);
+        $data = $response->getData();
+        self::assertSame($data['hash'], $data['hmac']);
+        self::assertTrue($response->isSuccessful());
+
+        self::assertSame('PAYMENT_AUTHORIZED', $response->getCode());
+
+        $notification = $response->getDataProperty('notification');
+        self::assertCount(54, $notification);
+
+        $content = $response->getContent();
+        self::assertStringStartsWith('<EPAYMENT>', $content);
+        self::assertStringEndsWith('</EPAYMENT>', $content);
     }
 
     protected function setUp()
