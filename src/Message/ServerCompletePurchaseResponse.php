@@ -2,7 +2,6 @@
 
 namespace ByTIC\Omnipay\Payu\Message;
 
-//use ByTIC\Common\Payments\Gateways\Providers\AbstractGateway\Message\ServerCompletePurchaseResponse as AbstractResponse;
 use ByTIC\Omnipay\Common\Message\Traits\GatewayNotificationResponseTrait;
 
 /**
@@ -12,6 +11,11 @@ use ByTIC\Omnipay\Common\Message\Traits\GatewayNotificationResponseTrait;
 class ServerCompletePurchaseResponse extends AbstractResponse
 {
     use GatewayNotificationResponseTrait;
+
+    public function send()
+    {
+        echo $this->getContent();
+    }
 
     /**
      * Is the response successful?
