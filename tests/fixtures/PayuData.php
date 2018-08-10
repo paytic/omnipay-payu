@@ -23,6 +23,7 @@ class PayuData
 
         $_SERVER['HTTP_HOST'] = 'hospice.galantom.ro';
         $_SERVER['REQUEST_URI'] = '/donations/confirm?id=37250';
+
         return $httpRequest;
     }
 
@@ -37,5 +38,30 @@ class PayuData
         $httpRequest->request->add(unserialize($post));
 
         return $httpRequest;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getPurchaseRequest()
+    {
+        return [
+            'amount' => 30,
+            'orderId' => 99,
+            'orderName' => 'Test name',
+            'notifyUrl' => 'test',
+            'returnUrl' => 'test',
+            'secretKey' => 'test',
+            'merchant' => 'test',
+            'items' => [
+                [
+                    'name' => 'Test',
+                    'price' => 30,
+                ],
+            ],
+            'card' => [
+                'name' => 'gabriel solomon',
+            ],
+        ];
     }
 }
