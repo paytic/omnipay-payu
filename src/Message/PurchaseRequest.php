@@ -5,6 +5,7 @@ namespace ByTIC\Omnipay\Payu\Message;
 use ByTIC\Omnipay\Common\Message\Traits\RequestDataGetWithValidationTrait;
 use ByTIC\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
 use ByTIC\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
+use Omnipay\Common\Item;
 
 /**
  * PayU Purchase Request
@@ -87,10 +88,16 @@ class PurchaseRequest extends AbstractRequest
         $quantity = [];
         $vat = [];
 
+        /** @var Item[] $items */
         $items = $this->getItems();
         if ($items instanceof \Countable && count($items)) {
-//            foreach ($items as $item) {
-//            }
+            foreach ($items as $item) {
+                $name[] = $item->getName();
+                $code[] = $this->getOrderId();
+                $price[] = $item->getPrice();
+                $quantity[] = $item->getQuantity();
+                $vat[] = 0;
+            }
         } elseif ($this->getAmount() > 0) {
             $name[] = $this->getOrderName();
             $code[] = $this->getOrderId();
