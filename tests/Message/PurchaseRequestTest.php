@@ -25,5 +25,4 @@ class PurchaseRequestTest extends AbstractTest
         self::assertTrue(isset($data['ORDER_PRICE'][0]));
         self::assertSame(30, $data['ORDER_PRICE'][0]);
     }
-
 }
