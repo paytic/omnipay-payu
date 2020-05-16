@@ -7,9 +7,10 @@ use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\CompletePurchaseResponse;
 use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\PurchaseResponse;
-use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
 use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseResponse;
 use ByTIC\Omnipay\Payu\Tests\Fixtures\PayuData;
+use Http\Discovery\Psr17FactoryDiscovery;
+use Omnipay\Common\Http\Client;
 
 /**
  * Class HelperTest
@@ -29,6 +30,8 @@ class GatewayTest extends AbstractTest
 
     public function testPurchase()
     {
+        $httpClient = new Client();
+
         $parameters = [
             'orderId' => '99',
             'orderName' => 'Test order name',
@@ -49,10 +52,13 @@ class GatewayTest extends AbstractTest
         $data = $response->getRedirectData();
         self::assertSame('GALANTOM', $data['MERCHANT']);
 
-        $payuResponse = $this->client->post($response->getRedirectUrl(), null, $data)->send();
+        $headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=utf-8';
+        $body = Psr17FactoryDiscovery::findStreamFactory()->createStream(http_build_query($data, '', '&'));
+
+        $payuResponse = $httpClient->request('POST', $response->getRedirectUrl(), $headers, $body);
         self::assertSame(200, $payuResponse->getStatusCode());
 
-        $body = $payuResponse->getBody(true);
+        $body = $payuResponse->getBody()->__toString();
         self::assertContains('checkout.php', $body);
         self::assertContains('CART_ID=', $body);
         self::assertContains('REF=99', $body);
@@ -110,7 +116,7 @@ class GatewayTest extends AbstractTest
     protected function setUp()
     {
         parent::setUp();
-        $this->client = new \Guzzle\Http\Client();
+        $this->client = $this > $this->getHttpClient();
 
         $this->gateway = new Gateway();
         $this->gateway->setMerchant($_ENV['PAYU_MERCHANT']);

@@ -17,7 +17,7 @@ class PurchaseRequestTest extends AbstractTest
     /** @noinspection PhpMethodNamingConventionInspection */
     public function testGetDataWithItems()
     {
-        $request = new PurchaseRequest(new \Guzzle\Http\Client(), new HttpRequest());
+        $request = new PurchaseRequest($this->getHttpClient(), new HttpRequest());
         $dataRequest = PayuData::getPurchaseRequest();
         $request->initialize($dataRequest);
         $data = $request->getData();

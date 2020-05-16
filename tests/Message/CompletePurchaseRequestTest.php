@@ -16,7 +16,7 @@ class CompletePurchaseRequestTest extends AbstractTest
     /** @noinspection PhpMethodNamingConventionInspection */
     public function testGetDataWithAuthorizedRequest()
     {
-        $client = new \Guzzle\Http\Client();
+        $client = $this->getHttpClient();
         $httpRequest = PayuData::getConfirmAuthorizedRequest();
         $request = new CompletePurchaseRequest($client, $httpRequest);
         $data = $request->getData();

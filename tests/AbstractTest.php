@@ -2,12 +2,10 @@
 
 namespace ByTIC\Omnipay\Payu\Tests;
 
-use PHPUnit\Framework\TestCase;
-
 /**
  * Class AbstractTest
  */
-abstract class AbstractTest extends TestCase
+abstract class AbstractTest extends \Omnipay\Tests\TestCase
 {
     protected $object;
 }
