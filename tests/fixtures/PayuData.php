@@ -1,12 +1,12 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Tests\Fixtures;
+namespace Paytic\Omnipay\Payu\Tests\Fixtures;
 
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * Class PayuData
- * @package ByTIC\Omnipay\Payu\Tests\Fixtures
+ * @package Paytic\Omnipay\Payu\Tests\Fixtures
  */
 class PayuData
 {

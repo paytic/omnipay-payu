@@ -1,15 +1,15 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Tests\Message;
+namespace Paytic\Omnipay\Payu\Tests\Message;
 
-use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
-use ByTIC\Omnipay\Payu\Tests\AbstractTest;
-use ByTIC\Omnipay\Payu\Tests\Fixtures\PayuData;
+use Paytic\Omnipay\Payu\Message\PurchaseRequest;
+use Paytic\Omnipay\Payu\Tests\AbstractTest;
+use Paytic\Omnipay\Payu\Tests\Fixtures\PayuData;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * Class PurchaseRequestTest
- * @package ByTIC\Omnipay\Payu\Tests\Message
+ * @package Paytic\Omnipay\Payu\Tests\Message
  */
 class PurchaseRequestTest extends AbstractTest
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Message\Traits;
+namespace Paytic\Omnipay\Payu\Message\Traits;
 
 /**
  * Trait RequestHasSecretKeyTrait
- * @package ByTIC\Omnipay\Payu\Message\Traits
+ * @package Paytic\Omnipay\Payu\Message\Traits
  *
  * @method setParameter($key, $value)
  * @method getParameter($key)

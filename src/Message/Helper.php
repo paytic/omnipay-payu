@@ -1,10 +1,10 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Message;
+namespace Paytic\Omnipay\Payu\Message;
 
 /**
  * Class Helper
- * @package ByTIC\Omnipay\Payu\Message
+ * @package Paytic\Omnipay\Payu\Message
  */
 class Helper
 {

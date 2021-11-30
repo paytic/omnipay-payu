@@ -1,5 +1,5 @@
 {
-  "name": "bytic/omnipay-payu",
+  "name": "paytic/omnipay-payu",
   "type": "library",
   "license": "MIT",
   "description": "PayU driver for ThePhpLeague Omnipay multi-payment processing library",
@@ -12,7 +12,7 @@
     "pay",
     "payment"
   ],
-  "homepage": "https://github.com/ByTIC/omnipay-payu",
+  "homepage": "https://github.com/paytic/omnipay-payu",
   "authors": [
     {
       "name": "Gabriel Solomon",
@@ -21,23 +21,23 @@
   ],
   "autoload": {
     "psr-4": {
-      "ByTIC\\Omnipay\\Payu\\": "src/"
+      "Paytic\\Omnipay\\Payu\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "ByTIC\\Omnipay\\Payu\\Tests\\": "tests/",
-      "ByTIC\\Omnipay\\Payu\\Tests\\Fixtures\\": "tests/fixtures"
+      "Paytic\\Omnipay\\Payu\\Tests\\": "tests/",
+      "Paytic\\Omnipay\\Payu\\Tests\\Fixtures\\": "tests/fixtures"
     }
   },
   "require": {
     "php": "^7.0|^8.0",
-    "bytic/omnipay-common": "^3.0"
+    "paytic/omnipay-common": "^3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.2|^7.0|^8.0|^9.0",
+    "phpunit/phpunit": "^8.0|^9.0",
     "vlucas/phpdotenv": "^2.5",
-    "omnipay/tests": "^3",
+    "omnipay/tests": "^3.0|^4.0",
     "nyholm/psr7": "^1.1"
   }
 }

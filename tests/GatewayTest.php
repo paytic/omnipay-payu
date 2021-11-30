@@ -1,20 +1,20 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Tests;
+namespace Paytic\Omnipay\Payu\Tests;
 
-use ByTIC\Omnipay\Payu\Gateway;
-use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
-use ByTIC\Omnipay\Payu\Message\CompletePurchaseResponse;
-use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
-use ByTIC\Omnipay\Payu\Message\PurchaseResponse;
-use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseResponse;
-use ByTIC\Omnipay\Payu\Tests\Fixtures\PayuData;
+use Paytic\Omnipay\Payu\Gateway;
+use Paytic\Omnipay\Payu\Message\CompletePurchaseRequest;
+use Paytic\Omnipay\Payu\Message\CompletePurchaseResponse;
+use Paytic\Omnipay\Payu\Message\PurchaseRequest;
+use Paytic\Omnipay\Payu\Message\PurchaseResponse;
+use Paytic\Omnipay\Payu\Message\ServerCompletePurchaseResponse;
+use Paytic\Omnipay\Payu\Tests\Fixtures\PayuData;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Omnipay\Common\Http\Client;
 
 /**
  * Class HelperTest
- * @package ByTIC\Omnipay\Payu\Tests
+ * @package Paytic\Omnipay\Payu\Tests
  */
 class GatewayTest extends AbstractTest
 {
@@ -59,9 +59,9 @@ class GatewayTest extends AbstractTest
         self::assertSame(200, $payuResponse->getStatusCode());
 
         $body = $payuResponse->getBody()->__toString();
-        self::assertContains('checkout.php', $body);
-        self::assertContains('CART_ID=', $body);
-        self::assertContains('REF=99', $body);
+        self::stringContains('checkout.php', $body);
+        self::stringContains('CART_ID=', $body);
+        self::stringContains('REF=99', $body);
     }
 
     public function testCompletePurchaseResponse()
@@ -113,7 +113,7 @@ class GatewayTest extends AbstractTest
         self::assertStringEndsWith('</EPAYMENT>', $content);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->client = $this > $this->getHttpClient();

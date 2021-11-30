@@ -1,6 +1,6 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Tests;
+namespace Paytic\Omnipay\Payu\Tests;
 
 /**
  * Class AbstractTest

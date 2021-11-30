@@ -1,13 +1,13 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Message;
+namespace Paytic\Omnipay\Payu\Message;
 
-use ByTIC\Omnipay\Common\Message\Traits\SendDataRequestTrait;
+use Paytic\Omnipay\Common\Message\Traits\SendDataRequestTrait;
 use Omnipay\Common\Message\AbstractRequest as CommonAbstractRequest;
 
 /**
  * Class AbstractRequest
- * @package ByTIC\Omnipay\Payu\Message
+ * @package Paytic\Omnipay\Payu\Message
  */
 abstract class AbstractRequest extends CommonAbstractRequest
 {

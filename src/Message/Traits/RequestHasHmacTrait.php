@@ -1,12 +1,12 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Message\Traits;
+namespace Paytic\Omnipay\Payu\Message\Traits;
 
-use ByTIC\Omnipay\Payu\Message\Helper;
+use Paytic\Omnipay\Payu\Message\Helper;
 
 /**
  * Trait RequestHasHmacTrait
- * @package ByTIC\Omnipay\Payu\Message\Traits
+ * @package Paytic\Omnipay\Payu\Message\Traits
  */
 trait RequestHasHmacTrait
 {

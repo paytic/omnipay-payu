@@ -1,10 +1,10 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu;
+namespace Paytic\Omnipay\Payu;
 
-use ByTIC\Omnipay\Payu\Message\CompletePurchaseRequest;
-use ByTIC\Omnipay\Payu\Message\PurchaseRequest;
-use ByTIC\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
+use Paytic\Omnipay\Payu\Message\CompletePurchaseRequest;
+use Paytic\Omnipay\Payu\Message\PurchaseRequest;
+use Paytic\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Omnipay\Common\AbstractGateway;
 use Omnipay\Common\Message\RequestInterface;

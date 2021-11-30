@@ -1,10 +1,10 @@
 <?php
 
-namespace ByTIC\Omnipay\Payu\Message;
+namespace Paytic\Omnipay\Payu\Message;
 
-use ByTIC\Omnipay\Common\Message\Traits\RequestDataGetWithValidationTrait;
-use ByTIC\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
-use ByTIC\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
+use Paytic\Omnipay\Common\Message\Traits\RequestDataGetWithValidationTrait;
+use Paytic\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
+use Paytic\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
 use Omnipay\Common\Item;
 
 /**
