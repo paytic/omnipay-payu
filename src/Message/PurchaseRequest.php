@@ -24,8 +24,8 @@ class PurchaseRequest extends AbstractRequest
      */
     public function initialize(array $parameters = [])
     {
-        $parameters['currency'] = isset($parameters['currency']) ? $parameters['currency'] : 'ron';
-        $parameters['orderDate'] = isset($parameters['orderDate']) ? $parameters['orderDate'] : date('Y-m-d H:i:s');
+        $parameters['currency'] = $parameters['currency'] ?? 'ron';
+        $parameters['orderDate'] = $parameters['orderDate'] ?? date('Y-m-d H:i:s');
 
         return parent::initialize($parameters);
     }
