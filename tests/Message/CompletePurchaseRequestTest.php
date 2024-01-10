@@ -5,6 +5,7 @@ namespace Paytic\Omnipay\Payu\Tests\Message;
 use Paytic\Omnipay\Payu\Message\CompletePurchaseRequest;
 use Paytic\Omnipay\Payu\Tests\AbstractTest;
 use Paytic\Omnipay\Payu\Tests\Fixtures\PayuData;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 /**
  * Class CompletePurchaseRequestTest
@@ -22,5 +23,6 @@ class CompletePurchaseRequestTest extends AbstractTest
         $data = $request->getData();
 
         self::assertArrayHasKey('ctrl', $data);
+
     }
 }

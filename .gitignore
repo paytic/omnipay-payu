@@ -1,5 +1,5 @@
 .idea/
-.phpunuit.result.cache
+.phpunit.result.cache
 
 vendor
 tests/.env

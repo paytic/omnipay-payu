@@ -5,6 +5,7 @@ namespace Paytic\Omnipay\Payu\Message;
 use Paytic\Omnipay\Common\Message\Traits\GatewayNotificationRequestTrait;
 use Paytic\Omnipay\Payu\Message\Traits\RequestHasHmacTrait;
 use Paytic\Omnipay\Payu\Message\Traits\RequestHasSecretKeyTrait;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 
 /**
  * Class PurchaseResponse
@@ -19,7 +20,7 @@ class CompletePurchaseRequest extends AbstractRequest
     /**
      * @return mixed
      */
-    protected function isValidNotification()
+    public function isValidNotification()
     {
         return $this->hasGet('ctrl') && $this->isValidCtrl();
     }
@@ -64,16 +65,23 @@ class CompletePurchaseRequest extends AbstractRequest
     protected function generateCtrl()
     {
         $returnUrl = $this->determineReturnUrl();
-
         return $this->generateHmac(Helper::generateHashFromString($returnUrl));
     }
 
     /**
      * @return string
      */
-    protected function determineReturnUrl()
+    protected function determineReturnUrl(): string
     {
-        $url = (isset($_SERVER['HTTPS']) ? "https" : "http") . "://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
+        $url = $this->httpRequest->getSchemeAndHttpHost()
+            . $this->httpRequest->getBaseUrl()
+            . $this->httpRequest->getPathInfo();
+
+        $query = $this->httpRequest->server->get('QUERY_STRING');
+        $params = HeaderUtils::parseQuery($query);
+        unset($params['ctrl']);
+        $url .= '?' . http_build_query($params, '', '&', \PHP_QUERY_RFC3986);
+
         return $url;
     }
 }
