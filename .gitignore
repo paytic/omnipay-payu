@@ -1,4 +1,6 @@
 .idea/
+.phpunuit.result.cache
+
 vendor
 tests/.env
 composer.lock
