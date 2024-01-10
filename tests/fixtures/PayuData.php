@@ -16,13 +16,9 @@ class PayuData
      */
     public static function getConfirmAuthorizedRequest()
     {
-        $httpRequest = new HttpRequest();
-
-        $httpRequest->query->set('id', '37250');
-        $httpRequest->query->set('ctrl', 'a300b00eb8622c89e3f4d47fe1ca6822');
-
-        $_SERVER['HTTP_HOST'] = 'hospice.galantom.ro';
-        $_SERVER['REQUEST_URI'] = '/donations/confirm?id=37250';
+        $httpRequest = HttpRequest::create(
+            'http://hospice.galantom.ro/donations/confirm?id=37250&ctrl=a300b00eb8622c89e3f4d47fe1ca6822',
+        );
 
         return $httpRequest;
     }
