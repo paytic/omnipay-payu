@@ -6,7 +6,7 @@ use Paytic\Omnipay\Payu\Message\CompletePurchaseRequest;
 use Paytic\Omnipay\Payu\Message\PurchaseRequest;
 use Paytic\Omnipay\Payu\Message\ServerCompletePurchaseRequest;
 use Symfony\Component\HttpFoundation\Request as HttpRequest;
-use Omnipay\Common\AbstractGateway;
+use Paytic\Omnipay\Common\Gateway\AbstractGateway;
 use Omnipay\Common\Message\RequestInterface;
 
 /**
